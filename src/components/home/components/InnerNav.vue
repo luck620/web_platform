@@ -11,8 +11,8 @@
       </div>
     </div>
     <div class="search">
-      <input v-model="q" type="text"/>
-      <span class="search-btn">搜索</span>
+      <input v-model="newsKeyWords" type="text"/>
+      <span class="search-btn" @click="searchNews">搜索</span>
     </div>
   </div>
 </template>
@@ -22,7 +22,12 @@ export default {
   name: 'InnerNav',
   data () {
     return {
+      newsKeyWords: '',
       num: '',
+      queryInfo: {
+        pageNum: 1,
+        pageSize: 10
+      },
       navbar_data: [
         {
           name: '工作动态',
@@ -49,6 +54,10 @@ export default {
     }
   },
   methods: {
+    searchNews () {
+      window.sessionStorage.setItem('newsKeyWords', this.newsKeyWords)
+      this.$router.push('/searchResult')
+    },
     handleTab (key, path) {
       console.log(path)
       this.num = key
@@ -65,7 +74,7 @@ export default {
 
 <style scoped>
   .changeColor{
-    color: red;;
+    color: red;
     padding-bottom:0px;
     border-bottom: 1px solid red;
     text-align: center;

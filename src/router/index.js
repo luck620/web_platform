@@ -8,6 +8,7 @@ import Activity from '../components/home/Activity'
 import University from '../components/home/University'
 import BookDiscovery from '../components/bookDiscovery/BookDiscovery'
 import yqfk from '../components/home/yqfk'
+import SearchResult from '../components/home/SearchResult'
 
 Vue.use(VueRouter)
 
@@ -54,6 +55,11 @@ const routes = [
     path: '/yqfk',
     name: 'yqfk',
     component: yqfk
+  },
+  {
+    path: '/searchResult',
+    name: 'searchResult',
+    component: SearchResult
   }
 ]
 

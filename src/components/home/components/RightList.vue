@@ -2,15 +2,10 @@
   <div class="right-list">
     <div class="img-top" v-for="(item,key) in themeImportantList" :item="item" :key="'top' + key" @click="getInfo(item.title)">
       <img :src="item.imageUrl" alt="">
-    </div>
-    <div class="nav">
-      <span v-for="(item, key) in nav" :item="item" :key="'nav' + key" @click="switch_nav(key)"
-      :class="{active: is_active(key)}">
-        {{item.title}}</span>
-    </div>
-
-    <div class="img-panel" v-for="(item, key) in themeOthersList" :item="item" :key="key">
-      <img :src="item.imageUrl" alt="">
+      <p><b><i>具体内容：</i></b></p>
+      <ul v-for="(item2,key) in item.themeDetailTitle" :item="item2" :key="'top2' + key">
+        <li>{{item2}}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -20,6 +15,8 @@ export default {
   name: 'RightList',
   data () {
     return {
+      yqListLeft: [],
+      yqListRight: [],
       queryInfo: {
         pageNum: 1,
         pageSize: 10
@@ -44,6 +41,20 @@ export default {
     this.getThemeByOthers()
   },
   methods: {
+    async getyqListLeft () {
+      await this.$http.get('http://localhost:8080/theme/getyqList/left').then((res) => {
+        console.log(res)
+        if (res.status !== 200) return this.$message.error('获取失败')
+        this.yqListLeft = res.data
+      })
+    },
+    async getyqListRight () {
+      await this.$http.get('http://localhost:8080/theme/getyqList/right').then((res) => {
+        console.log(res)
+        if (res.status !== 200) return this.$message.error('获取失败')
+        this.yqListRight = res.data
+      })
+    },
     getInfo (title) {
       this.$router.push('/' + title)
     },
@@ -71,11 +82,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .right-list {
     padding: 15px;
     float: right;
-    width: 400px;
+    width: 420px;
     display: inline-block;
     vertical-align: top;
     margin: 5px;
@@ -85,17 +96,20 @@ export default {
     border-bottom: 1px solid #d0d0d5;
   }
   .img-top {
-    text-align: center;
+    text-align: left;
     cursor: pointer;
+    margin-left: 20px;
   }
   .img-top img {
     margin-bottom: 15px;
+    text-align: center;
   }
   li {
-    height: 35px;
+    height: 25px;
+    font-family: 华文中宋;
+    font-size: 15px;
   }
   li:first-child {
-    list-style: none;
     margin-left: -17px;
   }
   li:first-child a {

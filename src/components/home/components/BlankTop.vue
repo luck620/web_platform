@@ -5,7 +5,7 @@
       <div class="nav-items">
          <span v-for="(item, key) in navbar_data"
                :item="item" :key="key"
-               :class="{active: is_active(key)}" @click="pushTo(item.path)"
+               :class="{changeTab: is_active(item)}" @click="pushTo(item.path)"
          >
            <img :src="item.srcPath" alt="">
         {{item.name}}
@@ -32,11 +32,6 @@ export default {
           srcPath: require('../../../assets/doc.png')
         },
         {
-          name: '教学资源',
-          path: '/teachResource',
-          srcPath: require('../../../assets/teaResource.png')
-        },
-        {
           name: '思政云课堂',
           path: '/yunClass',
           srcPath: require('../../../assets/hat.png')
@@ -45,11 +40,6 @@ export default {
           name: '教育质量评估',
           path: '/test',
           srcPath: require('../../../assets/evaluate.png')
-        },
-        {
-          name: '思想动态调查',
-          path: '/test',
-          srcPath: require('../../../assets/check.png')
         }
       ],
       active_num: 0
@@ -59,14 +49,20 @@ export default {
     pushTo (path) {
       this.$router.push(path)
     },
-    is_active (key) {
-      return key === this.active_num
+    is_active (item) {
+      return item.path === this.$route.path
     }
   }
 }
 </script>
 
 <style scoped>
+  .changeTab{
+    color: red;
+    padding-bottom:0px;
+    border-bottom: 1px solid red;
+    text-align: center;
+  }
   .blanktop {
     height: 35px;
     padding: 0 12%;

@@ -25,7 +25,7 @@
       <!--内容-->
       <div class="contentInfo">
         <ul>
-          <li v-for="(item, key) in yqList" :item="item" :key="key" @click="handleOpen(item.id)"><a>{{item.title}}</a></li>
+          <li v-for="(item, key) in yqListLeft" :item="item" :key="key" @click="handleOpen(item.id)"><a>{{item.title}}</a></li>
         </ul>
         <el-dialog title="视频详情" width="40%" :visible="dialogVisible" @close="dialogVisible" :before-close="handleClose">
           <video-player  class="vjs-custom-skin"
@@ -47,7 +47,7 @@
       </div>
       <div class="contentInfo">
         <ul>
-          <li v-for="(item, key) in yqList" :item="item" :key="key" @click="handleOpen(item.id)"><a>{{item.title}}</a></li>
+          <li v-for="(item, key) in yqListRight" :item="item" :key="key" @click="handleOpen(item.id)"><a>{{item.title}}</a></li>
         </ul>
         <el-dialog title="视频详情" width="40%" :visible="dialogVisible" @close="dialogVisible" :before-close="handleClose">
           <video-player  class="vjs-custom-skin"
@@ -76,7 +76,8 @@ export default {
   name: 'yqfk',
   data () {
     return {
-      yqList: [],
+      yqListLeft: [],
+      yqListRight: [],
       dialogVisible: false,
       videoUrl: '',
       imageUrl: '',
@@ -97,7 +98,8 @@ export default {
     }
   },
   created () {
-    this.getyqList()
+    this.getyqListLeft()
+    this.getyqListRight()
   },
   mounted () {
     setTimeout(() => {
@@ -125,11 +127,18 @@ export default {
       // 关闭弹出框时 视频关闭播放
       this.$refs.videoPlayer.player.pause() // 暂停
     },
-    async getyqList () {
-      await this.$http.get('http://localhost:8080/theme/getyqList').then((res) => {
+    async getyqListLeft () {
+      await this.$http.get('http://localhost:8080/theme/getyqList/left').then((res) => {
         console.log(res)
         if (res.status !== 200) return this.$message.error('获取失败')
-        this.yqList = res.data
+        this.yqListLeft = res.data
+      })
+    },
+    async getyqListRight () {
+      await this.$http.get('http://localhost:8080/theme/getyqList/right').then((res) => {
+        console.log(res)
+        if (res.status !== 200) return this.$message.error('获取失败')
+        this.yqListRight = res.data
       })
     },
     onPlayerPlay (player) {
@@ -170,11 +179,11 @@ export default {
 
 <style lang="less" scoped>
   .contentInfo {
-    margin-left: 50px;
     float: left;
-    width: 45%;
+    width: 50%;
   }
   .contentInfo li {
+    margin-top: 8px;
     text-align: left;
     font-family: 华文中宋;
     font-size: 18px;
