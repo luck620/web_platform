@@ -1,6 +1,6 @@
 <template>
   <div class="right-list">
-    <div class="img-top" v-for="(item,key) in themeImportantList" :item="item" :key="'top' + key">
+    <div class="img-top" v-for="(item,key) in themeImportantList" :item="item" :key="'top' + key" @click="getInfo(item.title)">
       <img :src="item.imageUrl" alt="">
     </div>
     <div class="nav">
@@ -44,6 +44,9 @@ export default {
     this.getThemeByOthers()
   },
   methods: {
+    getInfo (title) {
+      this.$router.push('/' + title)
+    },
     switch_nav (key) {
       this.active_num = key
     },
@@ -51,17 +54,17 @@ export default {
       return key === this.active_num
     },
     async getThemeByImportant () {
-      await this.$http.get('http://localhost:8080/theme/getThemeByImportant/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+      await this.$http.get('http://localhost:8080/theme/getThemeByImportant').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
-        this.themeImportantList = res.data.content
+        this.themeImportantList = res.data
       })
     },
     async getThemeByOthers () {
-      await this.$http.get('http://localhost:8080/theme/getThemeByOthers/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+      await this.$http.get('http://localhost:8080/theme/getThemeByOthers').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
-        this.themeOthersList = res.data.content
+        this.themeOthersList = res.data
       })
     }
   }
@@ -83,6 +86,10 @@ export default {
   }
   .img-top {
     text-align: center;
+    cursor: pointer;
+  }
+  .img-top img {
+    margin-bottom: 15px;
   }
   li {
     height: 35px;

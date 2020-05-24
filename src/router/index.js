@@ -7,6 +7,7 @@ import Teach from '../components/home/Teach'
 import Activity from '../components/home/Activity'
 import University from '../components/home/University'
 import BookDiscovery from '../components/bookDiscovery/BookDiscovery'
+import yqfk from '../components/home/yqfk'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,11 @@ const routes = [
     path: '/bookDiscovery',
     name: 'BookDiscovery',
     component: BookDiscovery
+  },
+  {
+    path: '/yqfk',
+    name: 'yqfk',
+    component: yqfk
   }
 ]
 
