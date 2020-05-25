@@ -1,11 +1,11 @@
 <template>
   <div>
-  <blank-top></blank-top>
+    <blank-top></blank-top>
     <div class="mod-baner">
       <!--<img src="/static/images/banner.jpg" alt="" class="site-banner">-->
       <div class="container">
         <div class="row">
-            <img src="../../assets/banner_title.png" alt="">
+          <img src="../../assets/banner_title.png" alt="">
         </div>
       </div>
     </div>
@@ -19,88 +19,107 @@
               <!--<form method="get">-->
               <div class="btn-group search-sf">
               </div>
-              <input type="text" placeholder="搜索感兴趣的资源" class="txt-search js-common-search-word" v-model="bookKeysWords"/>
-              <span class="btn-search" @click="searchBooks"></span>
+              <input type="text" v-model="bookKeysWords" placeholder="搜索感兴趣的资源" class="txt-search js-common-search-word"/>
+              <span class="btn-search"  @click="searchBooks"></span>
             </div>
 
-            <div class="mod-course-list">
-              <ul class="clearfix" id="dotcon-course-item-index">
-                <li class="col-md-6" @click="PageToMarxism">
-                  <div class="mod-course-meta">
-                    <div class="course-cover">
-                      <img class="course-img" src="../../assets/course1.jpg" alt="">
-                    </div>
-                    <div class="course-bd">
-                      <h2 class="course-title">马克思主义基本原理概论</h2>
-                      <p class="course-introduce"> 本课程是高校思想政治理论课必修课程，包括：
-                      马克思主义哲学、政治经济学和科学社会主义三部
-                      分。其目的是帮助学生掌握马克思主义的世界观与
-                      方法论，树立马克思主义的人生观与价值观.....</p>
-                    </div>
+            <div class="mod-course-list" >
+              <div class="resdetail-bd js-dot-resList" id="dot_content_resList" v-for="(item, key) in moralList" :key="key" :item="item">
+                <li class="item-res item-res-book clearfix">
+                  <div class="res-cover">
+                    <img :src="item.imageUrl" alt="" class width="118" height="158">
+                  </div>
+                  <div class= "res-meta">
+                    <dl class="res-meta-items">
+                      <dt class="res-meta-tt">
+                        <i class="res-meta-type">[图书]</i>
+                        {{item.name}}
+                      </dt>
+                      <div>
+                        <dd>
+                          <span class="res-meta-key">作者: </span>
+                          <em red="1">{{item.author}}</em>
+                        </dd>
+                        <dd>
+                          <span class="res-meta-key">出版时间: </span>
+                          {{item.publishTime}}
+                        </dd>
+                      </div>
+                      <dd>
+                        <span class="res -meta-key">出版机构: </span>
+                        <em red="1">{{item.publish}}</em>
+                      </dd>
+                      <dd>
+                        <span class="res-meta-key"> ISBN: </span>
+                        <em red="1">{{item.isbn}}</em>
+                      </dd>
+                      <dd class="res-meta-describe">
+                        <span class="res-meta-key">简介: </span>
+                        <em red="1">
+                          {{item.introduction}}</em>
+                      </dd>
+                    </dl>
                   </div>
                 </li>
-                <li class="col-md-6" @click="PageToMaoZD">
-                <div class="mod-course-meta">
-                <div class="course-cover">
-                <img class="course-img" src="../../assets/course2.jpg" alt="">
-                </div>
-                <div class="course-bd">
-                <h2 class="course-title">毛泽东思想和中国特色社会主义理论体系概论</h2>
-                <p class="course-introduce"> 本课程是高等学校思想政治理论课核心课程，以
-                中国化马克思主义为主题，以马克思主义中国化为主
-                线，以中国特色社会主义为重点......</p>
-                </div>
-                </div>
-                </li>
-                <li class="col-md-6" @click="PageToMoral">
-                <div class="mod-course-meta">
-                <div class="course-cover">
-                <img class="course-img" src="../../assets/course3.jpg" alt="">
-                </div>
-                <div class="course-bd">
-                <h2 class="course-title">思想道德修养与法律基础</h2>
-                <p class="course-introduce"> 本课程是以马克思列宁主义、毛泽东思想、邓小
-                平理论、“三个代表”重要思想和科学发展观为指导，
-                以社会主义核心价值体系为主线，依据大学生成长成
-                才规律，综合运用相关学科知识.....</p></div>
-                </div>
-                </li>
-                <li class="col-md-6" @click="PageToHistory">
-                <div class="mod-course-meta">
-                <div class="course-cover">
-                <img class="course-img" src="../../assets/course4.jpg" alt="">
-                </div>
-                <div class="course-bd">
-                <h2 class="course-title">中国近现代史纲要</h2>
-                <p class="course-introduce"> 本课程是高等学校思想政治理论课必修课程。按
-                照时间顺序共分为从鸦片战争到五四运动前夜、从五
-                四运动到新中国成立、从新中国成立到社会主义现代
-                化建设新时期三篇......</p></div>
-                </div>
-                </li>
-              </ul>
+              </div>
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="queryInfo.pageNum"
+                :page-sizes="[10, 20, 30 ,40, 100]"
+                :page-size="queryInfo.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+              </el-pagination>
             </div>
           </div>
         </div>
-        </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
 import BlankTop from '../home/components/BlankTop'
 export default {
-  name: 'BookDiscovery',
+  name: 'Moral',
   components: { BlankTop },
   data () {
     return {
-      bookKeysWords: ''
+      type: 'moral',
+      total: 0,
+      bookKeysWords: '',
+      queryInfo: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      moralList: []
     }
+  },
+  created () {
+    this.getAllBooksByType()
   },
   methods: {
     searchBooks () {
       window.sessionStorage.setItem('bookKeysWords', this.bookKeysWords)
       this.$router.push('/bookSearchResult')
+    },
+    async getAllBooksByType () {
+      await this.$http.get('http://localhost:8080/book/findAllByType/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '/' + this.type + '').then((res) => {
+        console.log(res)
+        if (res.status !== 200) return this.$message.error('获取失败')
+        this.moralList = res.data.content
+        this.total = res.data.totalElements
+      })
+    },
+    handleSizeChange (newSize) {
+      console.log(123)
+      this.queryInfo.pageSize = newSize
+      this.getAllBooksByType()
+    },
+    handleCurrentChange (newPage) {
+      this.queryInfo.pageNum = newPage
+      this.getAllBooksByType()
     },
     PageToMarxism () {
       this.$router.push('/marxism')
@@ -119,6 +138,131 @@ export default {
 </script>
 
 <style scoped>
+  .res-meta {
+    float: right;
+  }
+  .res-meta-items {
+    margin-top: 20px;
+    text-align: left;
+    float: right;
+    width: 500px;
+  }
+  .item-res-journal dt a, .item-res-book dt a {
+    color: #424242;
+  }
+  a, a:visited, a:hover, a:active, a:focus {
+    text-decoration: none;
+  }
+  a {
+    background-color: transparent;
+    cursor: pointer;
+  }
+  .res-meta-type {
+    margin-left: 3px;
+  }
+  em, i, dt {
+    font-style: normal;
+  }
+  .item-res-journal .res-meta-describe, .item-res-book .res-meta-describe {
+    margin-top: 26px;
+    color: #424242;
+  }
+  .item-res-journal dd, .item-res-book dd {
+    line-height: 30px;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 23px;
+  }
+  dd {
+    margin-inline-start: 40px;
+  }
+  dd {
+    margin-left: 0;
+  }
+  .item-res-journal .res-meta-describe, .item-res-book .res-meta-describe {
+    margin-top: 26px;
+    color: #424242;
+  }
+  .item-res-journal dd, .item-res-book dd {
+    line-height: 30px;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 23px;
+  }
+  .item-res-journal dt, .item-res-book dt {
+    font-size: 20px;
+    line-height: 18px;
+    color: #424242;
+    margin-bottom: 27px;
+    font-weight: 500;
+  }
+  .item-res-journal dd, .item-res-book dd {
+    line-height: 30px;
+    color: #8b8b8b;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 23px;
+  }
+  .item-res {
+    padding: 26px 50px 26px 28px;
+    margin-bottom: 18px;
+    border: 1px solid #ebd3cf;
+    background: #f8ffda;
+    height: 250px!important;
+  }
+  img {
+    vertical-align: middle;
+  }
+  .res-cover img {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .res-meta {
+    display: table;
+  }
+  .item-res-journal dl, .item-res-book dl {
+    font-size: 0;
+  }
+  div, p, h1, h2, h3, h4, h5, ul, ol, dl, li {
+    margin: 0;
+    padding: 0;
+  }
+  dl {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+  .item-res-journal dt, .item-res-book dt {
+    font-size: 18px;
+    line-height: 18px;
+    color: #424242;
+    margin-bottom: 27px;
+    font-weight: 500;
+  }
+  img {
+    border: 0;
+  }
+  .res-cover {
+    float: left;
+    margin-top: 12px;
+    margin-left: 15px;
+    margin-right: 34px;
+    width: 159px;
+    height: 226px;
+  }
+  li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+  }
+  ul, ol, li {
+    list-style: none;
+  }
+  .resdetail-bd {
+    min-height: 230px;
+    margin-top: 15px;
+  }
   .mod-course-list a {
     display: block;
     width: 100%;
@@ -132,8 +276,6 @@ export default {
   }
   img {
     vertical-align: middle;
-  }
-  img {
     border: 0;
   }
   .mod-course-meta .course-img {
@@ -174,7 +316,7 @@ export default {
   }
   .mod-course-list li {
     padding: 0;
-    height: 144px;
+    height: 230px;
     overflow: hidden;
   }
   .col-md-6 {
@@ -222,10 +364,12 @@ export default {
     background-position: right top;
   }
   .mod-course-list {
-    margin-top: 7.634855%;
     margin-bottom: 27px;
+    margin-left: 250px;
     padding-right: 10px;
     background: #fefefe;
+    width: 60%;
+    text-align: center;
   }
   .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
     position: relative;

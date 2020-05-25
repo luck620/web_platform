@@ -62,6 +62,8 @@ export default {
     padding-bottom:0px;
     border-bottom: 1px solid red;
     text-align: center;
+    font-style: italic;
+    font-weight: bold;
   }
   .blanktop {
     height: 35px;

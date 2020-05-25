@@ -34,7 +34,7 @@ export default {
   },
   data () {
     return {
-      total: '',
+      total: 0,
       queryInfo: {
         pageNum: 1,
         pageSize: 20
