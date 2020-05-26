@@ -32,12 +32,12 @@ export default {
           srcPath: require('../../../assets/doc.png')
         },
         {
-          name: '思政云课堂',
-          path: '/yunClass',
+          name: '思政课堂',
+          path: '/login',
           srcPath: require('../../../assets/hat.png')
         },
         {
-          name: '教育质量评估',
+          name: '教育调查',
           path: '/test',
           srcPath: require('../../../assets/evaluate.png')
         }

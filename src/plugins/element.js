@@ -29,7 +29,10 @@ import {
   Select,
   Option,
   Carousel,
-  CarouselItem
+  CarouselItem,
+  Radio,
+  RadioButton,
+  RadioGroup
 } from 'element-ui'
 
 Vue.use(Button)
@@ -60,5 +63,8 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Radio)
+Vue.use(RadioButton)
+Vue.use(RadioGroup)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

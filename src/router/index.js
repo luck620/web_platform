@@ -14,6 +14,12 @@ import MaoZD from '../components/bookDiscovery/MaoZD'
 import Marxism from '../components/bookDiscovery/Marxism'
 import Moral from '../components/bookDiscovery/Moral'
 import BookSearchResult from '../components/bookDiscovery/BookSearchResult'
+import Login from '../components/class/Login'
+import Student from '../components/class/Student'
+import Teacher from '../components/class/Teacher'
+import ClassManager from '../components/class/ClassManager'
+import WorkManager from '../components/class/WorkManager'
+import UserManager from '../components/class/UserManager'
 
 Vue.use(VueRouter)
 
@@ -90,10 +96,51 @@ const routes = [
     path: '/bookSearchResult',
     name: 'bookSearchResult',
     component: BookSearchResult
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/student',
+    name: 'student',
+    component: Student
+  },
+  {
+    path: '/teacher',
+    name: 'teacher',
+    component: Teacher,
+    redirect: '/classManager',
+    children: [
+      {
+        path: '/classManager',
+        name: 'classManager',
+        component: ClassManager
+      },
+      {
+        path: '/workManager',
+        name: 'workManager',
+        component: WorkManager
+      },
+      {
+        path: '/userManager',
+        name: 'userManager',
+        component: UserManager
+      }
+    ]
   }
 ]
 
 const router = new VueRouter({
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/teacher' && to.path !== '/classManager') return next()
+  const tokenStr = window.sessionStorage.getItem('token')
+  if (!tokenStr) return next('/login')
+  next()
+})
+
 export default router
