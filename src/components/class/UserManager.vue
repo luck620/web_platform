@@ -203,7 +203,8 @@ export default {
   }
   .h3{
     margin-left: 5px;
-    font-size: 24px;
+    font-size: 20px;
+    color: #777;
     font-weight: normal;
     padding-bottom: 15px;
     border-bottom: 1px solid #bbbbbb;

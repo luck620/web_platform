@@ -20,6 +20,7 @@ import Teacher from '../components/class/Teacher'
 import ClassManager from '../components/class/ClassManager'
 import WorkManager from '../components/class/WorkManager'
 import UserManager from '../components/class/UserManager'
+import UploadResource from '../components/class/UploadResource'
 
 Vue.use(VueRouter)
 
@@ -106,6 +107,11 @@ const routes = [
     path: '/student',
     name: 'student',
     component: Student
+  },
+  {
+    path: '/uploadResource',
+    name: 'uploadResource',
+    component: UploadResource
   },
   {
     path: '/teacher',

@@ -32,7 +32,8 @@ import {
   CarouselItem,
   Radio,
   RadioButton,
-  RadioGroup
+  RadioGroup,
+  Upload, Progress
 } from 'element-ui'
 
 Vue.use(Button)
@@ -66,5 +67,7 @@ Vue.use(CarouselItem)
 Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
+Vue.use(Upload)
+Vue.use(Progress)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

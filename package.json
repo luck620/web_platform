@@ -14,8 +14,11 @@
     "element-ui": "^2.4.5",
     "less": "^3.11.1",
     "less-loader": "^6.1.0",
+    "plupload": "^2.3.6",
+    "qiniu-js": "^2.5.5",
     "video.js": "latest",
     "vue": "^2.6.11",
+    "vue-cropper": "^0.5.2",
     "vue-router": "^3.0.7",
     "vue-video-player": "^5.0.2"
   },
