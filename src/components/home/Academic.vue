@@ -115,43 +115,43 @@ export default {
         }
       })
     },
-    async findMarksByType1 () {
-      await this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type1 + '').then((res) => {
+    findMarksByType1 () {
+      this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type1 + '').then((res) => {
         console.log(res)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.marks_list1 = res.data
       })
     },
-    async findMarksByType2 () {
-      await this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type2 + '').then((res) => {
+    findMarksByType2 () {
+      this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type2 + '').then((res) => {
         console.log(res)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.marks_list2 = res.data
       })
     },
-    async findMarksByType3 () {
-      await this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type3 + '').then((res) => {
+    findMarksByType3 () {
+      this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type3 + '').then((res) => {
         console.log(res)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.marks_list3 = res.data
       })
     },
-    async findMarksByType4 () {
-      await this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type4 + '').then((res) => {
+    findMarksByType4 () {
+      this.$http.get('http://localhost:8080/news/findMarksByType/' + this.type4 + '').then((res) => {
         console.log(res)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.marks_list4 = res.data
       })
     },
-    async getNewsByTypeOthers () {
-      await this.$http.get('http://localhost:8080/news/findAllOthers/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+    getNewsByTypeOthers () {
+      this.$http.get('http://localhost:8080/news/findAllOthers/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.news_list = res.data.content
       })
     },
-    async getImages () {
-      await this.$http.get('http://localhost:8080/news/findImagesAcademic/').then((res) => {
+    getImages () {
+      this.$http.get('http://localhost:8080/news/findImagesAcademic/').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.imgs = res.data
@@ -162,8 +162,8 @@ export default {
       window.sessionStorage.setItem('newsId', id)
       this.$router.push('/findDetail')
     },
-    async findAllImportantAcademic () {
-      await this.$http.get('http://localhost:8080/news/findAllImportantAcademic').then((res) => {
+    findAllImportantAcademic () {
+      this.$http.get('http://localhost:8080/news/findAllImportantAcademic').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.news = res.data

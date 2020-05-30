@@ -7,69 +7,45 @@
     </div>
     <div class="content">
       <div class="content_topRight">
-        <span class="span_text" @click="courseDialogVisible = true" >+创建课程</span>
+        <span class="span_text" @click="courseDialogVisible = true" >+选择课程</span>
       </div>
       <div class="content_bottom" v-for="(item,key) in courseList" :item="item" :key="key">
         <div class="course" @click="getCourseDetail(item.id)">
           <img :src="item.imageUrl" class="img_size">
           <div class="course_content">
             <h3 class="h3_name">{{item.name}}</h3>
-           <p class="p_others"> 课程号：{{item.courseNO}}</p>
+            <p class="p_others"> 课程号：{{item.courseNO}}</p>
             <p class="p_others">周数：{{item.weekNum}}</p>
             <p class="p_others">每周课时：{{item.periodNum}}</p>
           </div>
         </div>
       </div>
       <div class="page_push">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="queryInfo.pageNum"
-        :page-sizes="[6,9]"
-        :page-size="queryInfo.pageSize"
-        layout="total, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="queryInfo.pageNum"
+          :page-sizes="[6,9]"
+          :page-size="queryInfo.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
       </div>
     </div>
-    <!--新建课程-->
-    <el-dialog title="新建课程" :visible.sync="courseDialogVisible" width="30%" @close="courseDialogVisible = false">
-      <el-form :model="courseForm" :rules="courseFormRules" ref="courseFormRef" label-width="80px">
-        <el-form-item label="封面" prop="imageUrl">
-          <el-upload
-            class="avatar-uploader"
-            :multiple="true"
-            action="http://upload-z2.qiniup.com"
-            accept="image/jpeg,image/gif,image/png,image/bmp"
-            :show-file-list="false"
-            :data="postData"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            :on-error="handleError">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="课程名" prop="name">
-          <el-input v-model="courseForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="课程号" prop="courseNO">
-          <el-input v-model="courseForm.courseNO"></el-input>
-        </el-form-item>
-        <el-form-item label="周时" prop="weekNum">
-          <el-input type="number" v-model="courseForm.weekNum"></el-input>
-        </el-form-item>
-        <el-form-item label="每周课时" prop="periodNum">
-          <el-input type="number" v-model="courseForm.periodNum"></el-input>
-        </el-form-item>
-        <el-form-item label="课程描述" prop="description">
-          <el-input v-model="courseForm.description"></el-input>
-        </el-form-item>
-      </el-form>
+    <!--选择课程-->
+    <el-dialog title="选择课程" :visible.sync="courseDialogVisible" width="30%" @close="courseDialogVisible = false">
+      选择课程：<el-select v-model="courseId" filterable remote reserve-keyword :remote-method="remoteMethod"  placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id">
+      </el-option>
+    </el-select>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="courseDialogVisible = false" >取 消</el-button>
-        <el-button type="primary" @click="addCourse" >确 定</el-button>
+        <el-button type="primary" @click="chooseCourse" >确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -81,6 +57,8 @@ export default {
   inject: ['reload'],
   data () {
     return {
+      options: [],
+      courseId: '',
       queryInfo: {
         pageNum: 1,
         pageSize: 6
@@ -149,14 +127,21 @@ export default {
   created () {
     this.getToken()
     this.getCourse()
+    this.remoteMethod()
   },
   methods: {
+    async remoteMethod () {
+      this.$http.get('http://localhost:8080/course/getCourseListWithoutPage').then((res) => {
+        console.log(res)
+        this.options = res.data
+      })
+    },
     getCourseDetail (id) {
       console.log(id)
-      this.$http.get('http://localhost:8080/course/getCourseList/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
-        console.log(res)
-        this.courseList = res.data.content
-      })
+      // this.$http.get('http://localhost:8080/course/getCourseList/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+      //   console.log(res)
+      //   this.courseList = res.data.content
+      // })
     },
     handleSizeChange (newSize) {
       console.log(123)
@@ -168,26 +153,23 @@ export default {
       this.getCourse()
     },
     async getCourse () {
-      await this.$http.get('http://localhost:8080/course/getCourseListByTeacherId/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
+      await this.$http.get('http://localhost:8080/course/getCourseListWithStuId/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
         console.log(res)
         this.courseList = res.data.content
         this.total = res.data.totalElements
       })
     },
-    async addCourse () {
-      this.$refs.courseFormRef.validate(async valid => {
-        console.log(valid)
-        if (!valid) return
-        const { data: res } = await this.$http.post('http://localhost:8080/course/addCourseByTeacher/' + window.sessionStorage.getItem('loginId') + '/' + this.imageURL + '', this.courseForm)
-        window.sessionStorage.setItem('courseNO', this.courseForm.courseNO)
-        console.log(res)
-        if (res.code !== 200) {
-          this.$message.error('添加失败！')
-        }
-        this.$message.success('添加成功！')
-        this.courseDialogVisible = false
-        this.$router.push('/uploadResource')
-      })
+    async chooseCourse () {
+      console.log(this.courseId)
+      console.log(window.sessionStorage.getItem('loginId'))
+      const { data: res } = await this.$http.get('http://localhost:8080/course/chooseCourse/' + window.sessionStorage.getItem('loginId') + '/' + this.courseId + '')
+      console.log(res)
+      if (res.code !== 200) {
+        this.$message.error('添加失败！')
+      }
+      this.$message.success('添加成功！')
+      this.courseDialogVisible = false
+      this.reload()
     },
     async getToken () {
       await this.$http.get('http://localhost:8080/getUpToken').then((res) => {

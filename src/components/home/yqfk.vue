@@ -49,6 +49,7 @@
         <ul>
           <li v-for="(item, key) in yqListRight" :item="item" :key="key" @click="handleOpen(item.id)"><a>{{item.title}}</a></li>
         </ul>
+        <!--弹窗播放视频-->
         <el-dialog title="视频详情" width="40%" :visible="dialogVisible" @close="dialogVisible" :before-close="handleClose">
           <video-player  class="vjs-custom-skin"
                          ref="videoPlayer"

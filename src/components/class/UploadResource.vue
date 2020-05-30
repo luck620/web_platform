@@ -8,8 +8,12 @@
       <div class="content" v-for="(item, key) in info" :item="item" :key="key">
         <h2 style="margin-left: 40px" class="week_st">{{item.weekST}}</h2>
         <li class="sub_period" style="margin-left: 80px" v-for="(subItem, subKey) in item.periodList" :item="item" :key="subKey">
-          {{subItem}}<el-button style="margin-left: 200px;" @click="dialogVisible = true" round>添加教学视频</el-button></li>
+          {{subItem.periodST}}
+          <el-button style="margin-left: 200px;" @click="addVideo(subItem.id)" round>添加教学视频</el-button>
+            <span class="span_hasUpload" v-if="subItem.videoUrl !== null" style="margin-left: 180px">该课时视频已上传 √</span>
+        </li>
       </div>
+      <el-button type="primary" style="margin-left: 770px;margin-top: 20px" @click="PageToHome">提交</el-button>
     </div>
     <!--修改头像-->
     <el-dialog title="上传教学视频" :visible.sync="dialogVisible" width="30%" @close="dialogVisible = false">
@@ -30,7 +34,7 @@
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editHead" >确 定</el-button>
+        <el-button type="primary" @click="editVideoResource" >确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -61,14 +65,23 @@ export default {
     this.getToken()
   },
   methods: {
-    async editHead () {
-      console.log(this.imageURL)
-      const { data: res } = await this.$http.get('http://localhost:8080/teacher/changeHeadById/' + window.sessionStorage.getItem('loginId') + '/' + this.imageURL + '')
+    PageToHome () {
+      this.$router.push('/classManager')
+    },
+    addVideo (id) {
+      console.log(id)
+      this.dialogVisible = true
+      window.sessionStorage.setItem('periodId', id)
+    },
+    async editVideoResource () {
+      console.log(this.videoURL)
+      console.log(window.sessionStorage.getItem('periodId'))
+      const { data: res } = await this.$http.get('http://localhost:8080/period/addVideoResource/' + this.videoURL + '/' + window.sessionStorage.getItem('periodId') + '')
       console.log(res)
       if (res.code !== 200) {
-        this.$message.error('修改失败！')
+        this.$message.error('失败！')
       }
-      this.$message.success('修改成功！')
+      this.$message.success('已上传！')
       this.dialogVisible = false
       this.reload()
     },
@@ -122,6 +135,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .span_hasUpload{
+    font-style: italic;
+    font-family: 黑体;
+    color: #df5000;
+  }
   .sub_period{
     margin-left: 80px;
     margin-top: 10px;

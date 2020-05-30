@@ -56,7 +56,7 @@
               <span slot="title">班级成绩</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/workManager">
+          <router-link to="/notice">
             <el-menu-item index="1">
               <i class="el-icon-box"></i>
               <span slot="title">群公告</span>

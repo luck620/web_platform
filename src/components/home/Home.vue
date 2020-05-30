@@ -10,12 +10,12 @@
                           ref="news_wrapper" @switch_img="switch_img" @leave="leave"
             ></news-wrapper>
           </div>
-          <div class="bottom-panel">
+          <div class="bottom-panel" v-if="Object.keys(news_list).length!==0">
             <div v-for="(item, key) in news_list" :item="item" :key="key" class="new-item" @click='findDetailsOthers(item.id)'>
               <h2><a>{{item.title}}</a></h2>
               <div>
                 <img :src="item.imageUrl" alt="">
-                <div class="new-content" v-html="item.content">{{item.content}}</div>
+                <div class="new-content" v-html="item.content"></div>
               </div>
             </div>
           </div>
@@ -67,22 +67,23 @@ export default {
         }
       })
     },
-    async getImages () {
-      await this.$http.get('http://localhost:8080/news/findImages/').then((res) => {
+    getImages () {
+      this.$http.get('http://localhost:8080/news/findImages/').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.imgs = res.data
       })
     },
-    async getNewsByTypeImportant () {
-      await this.$http.get('http://localhost:8080/news/findAllImportant/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+    getNewsByTypeImportant () {
+      this.$http.get('http://localhost:8080/news/findAllImportant/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.news = res.data.content
       })
     },
-    async getNewsByTypeOthers () {
-      await this.$http.get('http://localhost:8080/news/findAllOthers/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
+    getNewsByTypeOthers () {
+      console.log(new Date().getTime())
+      this.$http.get('http://localhost:8080/news/findAllOthers/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
         console.log(res.data)
         if (res.status !== 200) return this.$message.error('获取失败')
         this.news_list = res.data.content

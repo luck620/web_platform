@@ -21,6 +21,12 @@ import ClassManager from '../components/class/ClassManager'
 import WorkManager from '../components/class/WorkManager'
 import UserManager from '../components/class/UserManager'
 import UploadResource from '../components/class/UploadResource'
+import Notice from '../components/class/Notice'
+import NoticeDetail from '../components/class/NoticeDetail'
+import StudentUserManager from '../components/class/StudentUserManager'
+import StudentClassManager from '../components/class/StudentClassManager'
+import StudentWorkManager from '../components/class/StudentWorkManager'
+import StudentNotice from '../components/class/StudentNotice'
 
 Vue.use(VueRouter)
 
@@ -114,6 +120,11 @@ const routes = [
     component: UploadResource
   },
   {
+    path: '/noticeDetail',
+    name: 'noticeDetail',
+    component: NoticeDetail
+  },
+  {
     path: '/teacher',
     name: 'teacher',
     component: Teacher,
@@ -133,6 +144,39 @@ const routes = [
         path: '/userManager',
         name: 'userManager',
         component: UserManager
+      },
+      {
+        path: '/notice',
+        name: 'notice',
+        component: Notice
+      }
+    ]
+  },
+  {
+    path: '/student',
+    name: 'student',
+    component: Student,
+    redirect: '/studentClassManager',
+    children: [
+      {
+        path: '/studentClassManager',
+        name: 'studentClassManager',
+        component: StudentClassManager
+      },
+      {
+        path: '/studentWorkManager',
+        name: 'studentWorkManager',
+        component: StudentWorkManager
+      },
+      {
+        path: '/studentUserManager',
+        name: 'studentUserManager',
+        component: StudentUserManager
+      },
+      {
+        path: '/studentNotice',
+        name: 'studentNotice',
+        component: StudentNotice
       }
     ]
   }
