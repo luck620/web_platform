@@ -22,7 +22,7 @@
       <el-button type="primary" style="margin-left: 770px;margin-top: 20px" @click="PageToHome">提交</el-button>
     </div>
     <!--上传试题-->
-    <el-dialog title="上传教学视频" :visible.sync="dialogVisible" width="60%" @close="dialogVisible = false">
+    <el-dialog title="上传题目" :visible.sync="dialogVisible" width="60%" @close="dialogVisible = false">
       <el-form :model="examUpdateForm" :rules="examUpdateFormRules" ref="examUpdateFormRef" label-width="80px">
         <el-form-item label="题目" prop="title">
           <el-input v-model="examUpdateForm.title" type="textarea"></el-input>
