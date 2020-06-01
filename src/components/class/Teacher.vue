@@ -47,10 +47,10 @@
           <router-link to="/workManager">
             <el-menu-item index="1">
               <i class="el-icon-pear"></i>
-              <span slot="title">课程作业</span>
+              <span slot="title">课程测验</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/workManager">
+          <router-link to="/classGrade">
             <el-menu-item index="1">
               <i class="el-icon-wallet"></i>
               <span slot="title">班级成绩</span>

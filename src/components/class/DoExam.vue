@@ -1,42 +1,32 @@
 <template>
   <div>
     <blank-top></blank-top>
+    <div v-if="this.score !== ''" style="margin-top: 100px;margin-left: 200px">
+      <h2>该测验已完成！</h2>
+      <h2>您的分数：{{this.score}}</h2>
+    </div>
+    <div v-if="this.score == ''">
     <div class="center">
       <div class="title">
-        <span class="charter">目录</span>
+        <span class="charter">开始考试</span>
       </div>
-      <div class="content" v-for="(item, key) in info" :item="item" :key="key">
-        <h2 style="margin-left: 40px" class="week_st">{{item.weekST}}</h2>
-        <li class="sub_period" style="margin-left: 80px" v-for="(subItem, subKey) in item.periodList" :item="item" :key="subKey">
-          {{subItem.periodST}}
-          <el-button style="margin-left: 200px;" @click="addVideo(subItem.id)" round>添加教学视频</el-button>
-            <span class="span_hasUpload" v-if="subItem.videoUrl !== null" style="margin-left: 180px">该课时视频已上传 √</span>
-        </li>
+      <div class="content" v-for="(item, key) in examList" :item="item" :key="key">
+        <div v-if="item.title !== null">
+        <span style="margin-left: 40px" class="week_st">{{key+1}}.{{item.title}}</span>
+        <div style="color: #df5000;margin-left: 50px;margin-top: 20px">
+          <el-radio-group v-model="item.choose">
+          <div v-if="item.chooseA !== null" style="margin-bottom: 5px;margin-left: 25px">
+            <el-radio label="A">A：{{item.chooseA}}</el-radio></div>
+          <div v-if="item.chooseB !== null" style="margin-bottom: 5px;margin-left: 25px"><el-radio label="B">B：{{item.chooseB}}</el-radio></div>
+          <div v-if="item.chooseC !== null" style="margin-bottom: 5px;margin-left: 25px"><el-radio label="C">C：{{item.chooseC}}</el-radio></div>
+          <div v-if="item.chooseD !== null" style="margin-bottom: 5px;margin-left: 25px"><el-radio label="D">D：{{item.chooseD}}</el-radio></div>
+          </el-radio-group>
+        </div>
+        </div>
       </div>
       <el-button type="primary" style="margin-left: 770px;margin-top: 20px" @click="PageToHome">提交</el-button>
     </div>
-    <!--上传资源-->
-    <el-dialog title="上传教学视频" :visible.sync="dialogVisible" width="30%" @close="dialogVisible = false">
-      <el-form :model="videoUrl" ref="imageUrlRef" label-width="80px">
-        <el-upload
-          class="avatar-uploader"
-          :multiple="true"
-          action="http://upload-z2.qiniup.com"
-          :show-file-list="false"
-          :data="postData"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          :on-error="handleError">
-          <video v-if="videoUrl" :src="videoUrl" class="avatar"></video>
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          <el-progress v-if="videoFlag == true" type="circle" :percentage="videoUploadPercent" style="margin-top:30px;"></el-progress>
-        </el-upload>
-      </el-form>
-      <!-- 底部区域 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editVideoResource" >确 定</el-button>
-      </span>
-    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -48,6 +38,42 @@ export default {
   components: { BlankTop },
   data () {
     return {
+      score: '',
+      radio: 1,
+      examUpdateForm: {
+        title: '',
+        chooseA: '',
+        chooseB: '',
+        chooseC: '',
+        chooseD: '',
+        answer: '',
+        content: ''
+      },
+      examUpdateFormRules: {
+        title: [
+          { required: true, message: '请输入题目', trigger: 'blur' }
+        ],
+        chooseA: [
+          { required: true, message: '请输入选项A', trigger: 'blur' }
+        ],
+        chooseB: [
+          { required: true, message: '请输入选项B', trigger: 'blur' }
+        ],
+        chooseC: [
+          { required: true, message: '请输入选项C', trigger: 'blur' }
+        ],
+        chooseD: [
+          { required: true, message: '请输入选项D', trigger: 'blur' }
+        ],
+        answer: [
+          { required: true, message: '请输入正确答案', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入解析', trigger: 'blur' }
+        ]
+      },
+      options: ['A', 'B', 'C', 'D'],
+      examList: [],
       videoFlag: ' ',
       videoUploadPercent: '',
       postData: {
@@ -61,29 +87,53 @@ export default {
     }
   },
   created () {
-    this.getInfo()
-    this.getToken()
+    this.getExam()
+    this.getScore()
   },
   methods: {
-    PageToHome () {
-      this.$router.push('/classManager')
+    async getExam () {
+      const { data: res } = await this.$http.get('http://localhost:8080/exam/getExam/' + window.sessionStorage.getItem('courseId_exam') + '')
+      console.log(res)
+      this.examList = res
+      for (var item in this.examList) {
+        this.$set(this.examList[item], 'choose', '')
+      }
+      console.log('test', this.examList)
     },
-    addVideo (id) {
+    async getScore () {
+      const { data: res } = await this.$http.get('http://localhost:8080/exam/hasScore/' + window.sessionStorage.getItem('loginId') + '/' + window.sessionStorage.getItem('courseId_exam'))
+      console.log(res)
+      this.score = res
+    },
+    async PageToHome () {
+      window.sessionStorage.getItem('courseId,exam')
+      const chooseList = {}
+      for (var item in this.examList) {
+        this.$set(chooseList, this.examList[item].id, this.examList[item].choose)
+      }
+      console.log(chooseList)
+      const { data: res } = await this.$http.post('http://localhost:8080/exam/submitAnswer/' + window.sessionStorage.getItem('loginId') + '/' + window.sessionStorage.getItem('courseId_exam'), chooseList)
+      console.log(res)
+      this.$router.push('/studentWorkManager')
+    },
+    addExam (id) {
       console.log(id)
       this.dialogVisible = true
-      window.sessionStorage.setItem('periodId', id)
+      window.sessionStorage.setItem('examId', id)
     },
-    async editVideoResource () {
-      console.log(this.videoURL)
-      console.log(window.sessionStorage.getItem('periodId'))
-      const { data: res } = await this.$http.get('http://localhost:8080/period/addVideoResource/' + this.videoURL + '/' + window.sessionStorage.getItem('periodId') + '')
-      console.log(res)
-      if (res.code !== 200) {
-        this.$message.error('失败！')
-      }
-      this.$message.success('已上传！')
-      this.dialogVisible = false
-      this.reload()
+    async updateExam () {
+      this.$refs.examUpdateFormRef.validate(async valid => {
+        if (!valid) return
+        console.log(this.examUpdateForm.answer)
+        const { data: res } = await this.$http.post('http://localhost:8080/exam/updateExamInfo/' + window.sessionStorage.getItem('examId') + '', this.examUpdateForm)
+        console.log(res)
+        if (res.code !== 200) {
+          this.$message.error('失败！')
+        }
+        this.$message.success('已上传！')
+        this.dialogVisible = false
+        this.reload()
+      })
     },
     async getToken () {
       await this.$http.get('http://localhost:8080/getUpToken').then((res) => {

@@ -38,7 +38,7 @@ export default {
         },
         {
           name: '教育调查',
-          path: '/test',
+          path: '/analyze',
           srcPath: require('../../../assets/evaluate.png')
         }
       ],
@@ -47,7 +47,12 @@ export default {
   },
   methods: {
     pushTo (path) {
-      this.$router.push(path)
+      if (path === '/analyze') {
+        const routeData = this.$router.resolve('/analyze')
+        window.open(routeData.href, '_blank')
+      } else {
+        this.$router.push(path)
+      }
     },
     is_active (item) {
       return item.path === this.$route.path

@@ -3,38 +3,57 @@
     <blank-top></blank-top>
     <div class="center">
       <div class="title">
-        <span class="charter">目录</span>
+        <span class="charter">上传题目</span>
       </div>
-      <div class="content" v-for="(item, key) in info" :item="item" :key="key">
-        <h2 style="margin-left: 40px" class="week_st">{{item.weekST}}</h2>
-        <li class="sub_period" style="margin-left: 80px" v-for="(subItem, subKey) in item.periodList" :item="item" :key="subKey">
-          {{subItem.periodST}}
-          <el-button style="margin-left: 200px;" @click="addVideo(subItem.id)" round>添加教学视频</el-button>
-            <span class="span_hasUpload" v-if="subItem.videoUrl !== null" style="margin-left: 180px">该课时视频已上传 √</span>
-        </li>
+      <div class="content" v-for="(item, key) in examList" :item="item" :key="key">
+        <span style="margin-left: 40px" class="week_st">{{key+1}}.{{item.type}}</span>
+          <el-button style="margin-left: 200px;" @click="addExam(item.id)" round>编辑该题</el-button>
+          <span class="span_hasUpload" v-if="item.title !== null" style="margin-left: 180px">该题编辑已完成 √</span>
+        <div v-if="item.title !== null" style="color: #df5000;margin-left: 50px;margin-top: 20px">
+          <div>题目：{{item.title}}</div>
+          <div style="margin-bottom: 5px;margin-left: 25px">A：{{item.chooseA}}</div>
+          <div style="margin-bottom: 5px;margin-left: 25px">B：{{item.chooseB}}</div>
+          <div style="margin-bottom: 5px;margin-left: 25px">C：{{item.chooseC}}</div>
+          <div style="margin-bottom: 5px;margin-left: 25px">D：{{item.chooseD}}</div>
+          <div>答案：{{item.answer}}</div>
+          <div>解析：{{item.content}}</div>
+        </div>
       </div>
       <el-button type="primary" style="margin-left: 770px;margin-top: 20px" @click="PageToHome">提交</el-button>
     </div>
-    <!--上传资源-->
-    <el-dialog title="上传教学视频" :visible.sync="dialogVisible" width="30%" @close="dialogVisible = false">
-      <el-form :model="videoUrl" ref="imageUrlRef" label-width="80px">
-        <el-upload
-          class="avatar-uploader"
-          :multiple="true"
-          action="http://upload-z2.qiniup.com"
-          :show-file-list="false"
-          :data="postData"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          :on-error="handleError">
-          <video v-if="videoUrl" :src="videoUrl" class="avatar"></video>
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          <el-progress v-if="videoFlag == true" type="circle" :percentage="videoUploadPercent" style="margin-top:30px;"></el-progress>
-        </el-upload>
+    <!--上传试题-->
+    <el-dialog title="上传教学视频" :visible.sync="dialogVisible" width="60%" @close="dialogVisible = false">
+      <el-form :model="examUpdateForm" :rules="examUpdateFormRules" ref="examUpdateFormRef" label-width="80px">
+        <el-form-item label="题目" prop="title">
+          <el-input v-model="examUpdateForm.title" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="选项A" prop="chooseA">
+          <el-input v-model="examUpdateForm.chooseA" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="选项B" prop="chooseB">
+          <el-input v-model="examUpdateForm.chooseB" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="选项C" prop="chooseC">
+          <el-input v-model="examUpdateForm.chooseC" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="选项D" prop="chooseD">
+          <el-input v-model="examUpdateForm.chooseD" type="textarea"></el-input>
+        </el-form-item>
+        <span style="margin-left: 12px">正确答案：<el-select v-model="examUpdateForm.answer" filterable placeholder="请选择正确答案" aria-label="正确答案">
+          <el-option
+            v-for="item in options"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select></span>
+        <el-form-item label="答案解析" prop="content" style="margin-top: 25px">
+          <el-input v-model="examUpdateForm.content" type="textarea"></el-input>
+        </el-form-item>
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editVideoResource" >确 定</el-button>
+        <el-button type="primary" @click="updateExam" >确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -48,6 +67,42 @@ export default {
   components: { BlankTop },
   data () {
     return {
+      examUpdateForm: {
+        title: '',
+        chooseA: '',
+        chooseB: '',
+        chooseC: '',
+        chooseD: '',
+        answer: '',
+        content: ''
+      },
+      examUpdateFormRules: {
+        title: [
+          { required: true, message: '请输入题目', trigger: 'blur' }
+        ],
+        chooseA: [
+          { required: true, message: '请输入选项A', trigger: 'blur' }
+        ],
+        chooseB: [
+          { required: true, message: '请输入选项B', trigger: 'blur' }
+        ],
+        chooseC: [
+          { required: true, message: '请输入选项C', trigger: 'blur' }
+        ],
+        chooseD: [
+          { required: true, message: '请输入选项D', trigger: 'blur' }
+        ],
+        answer: [
+          { required: true, message: '请输入正确答案', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入解析', trigger: 'blur' }
+        ]
+      },
+      options: ['A', 'B', 'C', 'D'],
+      examList: {
+        title: ''
+      },
       videoFlag: ' ',
       videoUploadPercent: '',
       postData: {
@@ -61,29 +116,35 @@ export default {
     }
   },
   created () {
-    this.getInfo()
-    this.getToken()
+    this.getExam()
   },
   methods: {
-    PageToHome () {
-      this.$router.push('/classManager')
+    async getExam () {
+      const { data: res } = await this.$http.get('http://localhost:8080/exam/getExam/' + window.sessionStorage.getItem('exam_courseId') + '')
+      console.log(res)
+      this.examList = res
     },
-    addVideo (id) {
+    PageToHome () {
+      this.$router.push('/workManager')
+    },
+    addExam (id) {
       console.log(id)
       this.dialogVisible = true
-      window.sessionStorage.setItem('periodId', id)
+      window.sessionStorage.setItem('examId', id)
     },
-    async editVideoResource () {
-      console.log(this.videoURL)
-      console.log(window.sessionStorage.getItem('periodId'))
-      const { data: res } = await this.$http.get('http://localhost:8080/period/addVideoResource/' + this.videoURL + '/' + window.sessionStorage.getItem('periodId') + '')
-      console.log(res)
-      if (res.code !== 200) {
-        this.$message.error('失败！')
-      }
-      this.$message.success('已上传！')
-      this.dialogVisible = false
-      this.reload()
+    async updateExam () {
+      this.$refs.examUpdateFormRef.validate(async valid => {
+        if (!valid) return
+        console.log(this.examUpdateForm.answer)
+        const { data: res } = await this.$http.post('http://localhost:8080/exam/updateExamInfo/' + window.sessionStorage.getItem('examId') + '', this.examUpdateForm)
+        console.log(res)
+        if (res.code !== 200) {
+          this.$message.error('失败！')
+        }
+        this.$message.success('已上传！')
+        this.dialogVisible = false
+        this.reload()
+      })
     },
     async getToken () {
       await this.$http.get('http://localhost:8080/getUpToken').then((res) => {

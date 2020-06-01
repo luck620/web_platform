@@ -50,12 +50,6 @@
               <span slot="title">课程作业</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/studentWorkManager">
-            <el-menu-item index="1">
-              <i class="el-icon-wallet"></i>
-              <span slot="title">班级成绩</span>
-            </el-menu-item>
-          </router-link>
           <router-link to="/studentNotice">
             <el-menu-item index="1">
               <i class="el-icon-box"></i>

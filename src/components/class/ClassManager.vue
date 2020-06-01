@@ -249,7 +249,7 @@ export default {
     height: 169px;
   }
   .page_push{
-    margin-top: 620px;
+    margin-top: 630px;
     margin-left: 400px;
   }
   .avatar-uploader .el-upload {

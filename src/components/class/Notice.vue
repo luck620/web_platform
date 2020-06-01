@@ -256,11 +256,11 @@ export default {
   .img_size{
     margin-left: 10px;
     margin-top: 5px;
+    margin-top: 620px;
     width: 250px;
     height: 169px;
   }
   .page_push{
-    margin-top: 620px;
     margin-left: 400px;
   }
   .avatar-uploader .el-upload {

@@ -2,7 +2,7 @@
   <div>
     <div class="wrap_body">
       <ul class="ul_tab">
-        <li class="li_item">我教的课</li>
+        <li class="li_item">我学的课</li>
       </ul>
     </div>
     <div class="content">

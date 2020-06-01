@@ -2,17 +2,17 @@
   <div>
     <div class="wrap_body">
       <ul class="ul_tab">
-        <li class="li_item">已发布测验</li>
+        <li class="li_item">课程成绩</li>
       </ul>
     </div>
     <div class="content">
       <div class="content_bottom" v-for="(item,key) in courseList" :item="item" :key="key">
-        <div class="course" @click="getCourseExamDetail(item.id)">
+        <div class="course" @click="getCourseGradeDetail(item.id)">
           <img :src="item.imageUrl" class="img_size">
           <div class="course_content">
             <h3 class="h3_name">{{item.name}}</h3>
             <p class="p_others"> 课程号：{{item.courseNO}}</p>
-            <h4 class="h4_test">点击进入完成测验</h4>
+            <h4 class="h4_test">点击查看此课程学生成绩</h4>
           </div>
         </div>
       </div>
@@ -28,6 +28,30 @@
         </el-pagination>
       </div>
     </div>
+    <!--发布测验-->
+    <el-dialog title="发布测验" :visible.sync="courseDialogVisible" width="30%" @close="courseDialogVisible = false">
+      <el-form :model="examForm" :rules="examFormRules" ref="examFormRef" label-width="100px">
+      <span  style="margin-left: 30px"><span style="margin-right: 12px">选择课程</span><el-select v-model="examForm.courseId" filterable remote reserve-keyword :remote-method="remoteMethod"  placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id">
+      </el-option>
+    </el-select></span>
+        <el-form-item label="选择题数量" prop="type1Num" style="margin-top: 10px">
+          <el-input style="width: 222px" v-model="examForm.type1Num" type="number" min="0"></el-input>
+        </el-form-item>
+        <el-form-item label="判断题数量" prop="type2Num">
+          <el-input style="width: 222px" v-model="examForm.type2Num" type="number" min="0"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 底部区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="courseDialogVisible = false" >取 消</el-button>
+        <el-button type="primary" @click="addCourseExam" >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,8 +60,31 @@ export default {
   name: 'ClassManager',
   inject: ['reload'],
   data () {
+    const checkNum = (rule, value, cb) => {
+      // 验证邮箱的正则表达式
+      const regNum = /^100$|^(\d|[1-9]\d)$/
+      if (regNum.test(value)) {
+        // 合法的数字
+        return cb()
+      }
+      cb(new Error('数字不能小于0且不能是小数'))
+    }
     return {
-      score: '',
+      examForm: {
+        type1Num: 0,
+        type2Num: 0,
+        courseId: ''
+      },
+      examFormRules: {
+        type1Num: [
+          { required: true, message: '请输入选择题数量', trigger: 'blur' },
+          { validator: checkNum, trigger: 'blur' }
+        ],
+        type2Num: [
+          { required: true, message: '请输入判断题数量', trigger: 'blur' },
+          { validator: checkNum, trigger: 'blur' }
+        ]
+      },
       options: [],
       courseId: '',
       queryInfo: {
@@ -73,10 +120,10 @@ export default {
         this.options = res.data
       })
     },
-    getCourseExamDetail (id) {
-      window.sessionStorage.setItem('courseId_exam', id)
-      const routeData = this.$router.resolve('/doExam')
-      window.open(routeData.href, '_blank')
+    getCourseGradeDetail (id) {
+      console.log(id)
+      window.sessionStorage.setItem('sc_courseId', id)
+      window.open(this.$router.resolve('/showClassGrade').href, '_blank')
       // this.$http.get('http://localhost:8080/course/getCourseList/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
       //   console.log(res)
       //   this.courseList = res.data.content
@@ -92,22 +139,24 @@ export default {
       this.getCourse()
     },
     async getCourseTest () {
-      await this.$http.get('http://localhost:8080/course/getCourseTestByStuId/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
+      await this.$http.get('http://localhost:8080/course/getCourseTestByTeaId/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
         console.log(res)
         this.courseList = res.data.content
         this.total = res.data.totalElements
       })
     },
-    async addCourseTest () {
-      console.log(this.courseId)
-      const { data: res } = await this.$http.get('http://localhost:8080/course/addCourseTest/' + this.courseId + '/' + this.wordURL + '')
-      console.log(res)
-      if (res.code !== 200) {
-        this.$message.error('发布失败！')
-      }
-      this.$message.success('发布成功！')
-      this.courseDialogVisible = false
-      this.reload()
+    async addCourseExam () {
+      this.$refs.examFormRef.validate(async valid => {
+        if (!valid) return
+        if (this.examForm.type1Num === 0 && this.examForm.type2Num === 0) {
+          this.$message.error('题目总数量不能为 0')
+          return
+        }
+        const { data: res } = await this.$http.post('http://localhost:8080/course/addCourseExam', this.examForm)
+        console.log(res)
+        window.sessionStorage.setItem('exam_courseId', this.examForm.courseId)
+        window.open(this.$router.resolve('/publishExam').href, '_blank')
+      })
     },
     async getToken () {
       await this.$http.get('http://localhost:8080/getUpToken').then((res) => {

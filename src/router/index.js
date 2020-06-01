@@ -27,6 +27,11 @@ import StudentUserManager from '../components/class/StudentUserManager'
 import StudentClassManager from '../components/class/StudentClassManager'
 import StudentWorkManager from '../components/class/StudentWorkManager'
 import StudentNotice from '../components/class/StudentNotice'
+import PublishExam from '../components/class/PublishExam'
+import DoExam from '../components/class/DoExam'
+import Analyze from '../components/discovery/Analyze'
+import ClassGrade from '../components/class/ClassGrade'
+import ShowClassGrade from '../components/class/ShowClassGrade'
 
 Vue.use(VueRouter)
 
@@ -50,6 +55,11 @@ const routes = [
     component: Academic
   },
   {
+    path: '/analyze',
+    name: 'analyze',
+    component: Analyze
+  },
+  {
     path: '/teach',
     name: 'Teach',
     component: Teach
@@ -58,6 +68,11 @@ const routes = [
     path: '/activity',
     name: 'Activity',
     component: Activity
+  },
+  {
+    path: '/showClassGrade',
+    name: 'showClassGrade',
+    component: ShowClassGrade
   },
   {
     path: '/university',
@@ -125,6 +140,16 @@ const routes = [
     component: NoticeDetail
   },
   {
+    path: '/publishExam',
+    name: 'publishExam',
+    component: PublishExam
+  },
+  {
+    path: '/doExam',
+    name: 'doExam',
+    component: DoExam
+  },
+  {
     path: '/teacher',
     name: 'teacher',
     component: Teacher,
@@ -144,6 +169,11 @@ const routes = [
         path: '/userManager',
         name: 'userManager',
         component: UserManager
+      },
+      {
+        path: '/classGrade',
+        name: 'classGrade',
+        component: ClassGrade
       },
       {
         path: '/notice',

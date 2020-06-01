@@ -33,7 +33,8 @@ import {
   Radio,
   RadioButton,
   RadioGroup,
-  Upload, Progress
+  Upload,
+  Progress
 } from 'element-ui'
 
 Vue.use(Button)
