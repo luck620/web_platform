@@ -135,7 +135,7 @@ export default {
       this.$refs.noticeFormRef.resetFields()
     },
     async remoteMethod () {
-      this.$http.get('http://localhost:8080/course/getCourseListWithoutPage').then((res) => {
+      this.$http.get('http://localhost:8080/course/getCourseListByTeacher/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
         console.log(res)
         this.options = res.data
       })

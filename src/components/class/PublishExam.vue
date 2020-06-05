@@ -86,12 +86,6 @@ export default {
         chooseB: [
           { required: true, message: '请输入选项B', trigger: 'blur' }
         ],
-        chooseC: [
-          { required: true, message: '请输入选项C', trigger: 'blur' }
-        ],
-        chooseD: [
-          { required: true, message: '请输入选项D', trigger: 'blur' }
-        ],
         answer: [
           { required: true, message: '请输入正确答案', trigger: 'blur' }
         ],

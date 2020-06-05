@@ -118,7 +118,8 @@ export default {
   },
   methods: {
     async remoteMethod () {
-      this.$http.get('http://localhost:8080/course/getCourseListWithoutPage').then((res) => {
+      console.log(window.sessionStorage.getItem('loginId'))
+      this.$http.get('http://localhost:8080/course/getCourseListByTeacher/' + window.sessionStorage.getItem('loginId') + '').then((res) => {
         console.log(res)
         this.options = res.data
       })

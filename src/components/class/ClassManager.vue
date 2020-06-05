@@ -153,10 +153,9 @@ export default {
   methods: {
     getCourseDetail (id) {
       console.log(id)
-      this.$http.get('http://localhost:8080/course/getCourseList/' + (this.queryInfo.pageNum - 1) + '/' + this.queryInfo.pageSize + '').then((res) => {
-        console.log(res)
-        this.courseList = res.data.content
-      })
+      window.sessionStorage.setItem('courseDetailId', id)
+      const routeData = this.$router.resolve('/findCourseDetail')
+      window.open(routeData.href, '_blank')
     },
     handleSizeChange (newSize) {
       console.log(123)

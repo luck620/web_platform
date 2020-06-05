@@ -132,19 +132,39 @@ export default {
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' }
         ]
-      }
+      },
+      phoneList: []
     }
   },
+  created () {
+    this.getPhoneList()
+  },
   methods: {
+    async getPhoneList () {
+      await this.$http.get('http://localhost:8080/student/getPhoneList').then((res) => {
+        console.log(res)
+        this.phoneList = res.data
+      })
+    },
     addTeaOrStu () {
       this.$refs.infoRef.validate(async valid => {
         if (!valid) return
-        const { data: res } = await this.$http.post('http://localhost:8080/student/register', this.info)
-        console.log(res)
-        console.log(res.code)
-        if (res.code !== 200) return this.$message.error('注册失败')
-        this.$message.success('注册成功')
-        this.reload()
+        let sign = 0
+        for (const phone of this.phoneList) {
+          if (phone === this.info.phone) {
+            sign = 1
+            console.log('123' + phone === this.info.phone)
+            this.$message.error('该手机号已被注册！')
+          }
+        }
+        if (sign === 0) {
+          const { data: res } = await this.$http.post('http://localhost:8080/student/register', this.info)
+          console.log(res)
+          console.log(res.code)
+          if (res.code !== 200) return this.$message.error('注册失败')
+          this.$message.success('注册成功')
+          this.reload()
+        }
       })
     },
     dialogClosed () {

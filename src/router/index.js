@@ -32,6 +32,7 @@ import DoExam from '../components/class/DoExam'
 import Analyze from '../components/discovery/Analyze'
 import ClassGrade from '../components/class/ClassGrade'
 import ShowClassGrade from '../components/class/ShowClassGrade'
+import CourseDetail from '../components/class/CourseDetail'
 
 Vue.use(VueRouter)
 
@@ -133,6 +134,11 @@ const routes = [
     path: '/uploadResource',
     name: 'uploadResource',
     component: UploadResource
+  },
+  {
+    path: '/findCourseDetail',
+    name: 'findCourseDetail',
+    component: CourseDetail
   },
   {
     path: '/noticeDetail',
