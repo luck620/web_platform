@@ -14,7 +14,7 @@
     "element-ui": "^2.4.5",
     "less": "^3.11.1",
     "less-loader": "^6.1.0",
-    "plupload": "^2.3.6",
+    "plupload": "^2.3.9",
     "qiniu-js": "^2.5.5",
     "video.js": "latest",
     "vue": "^2.6.11",
